@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Party Planners Global - Event Promoter and Entertainment Company specializing in Photography, Videography, and Event Documentation">
+    <meta name="keywords"
+        content="party planners, event photography, videography, event promotions, film making, photo editing">
+    <title>Party Planners Global | We Capture Moments</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="styles.css">
+
+    <!-- Supabase JS (UMD build for browser) -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="#home" class="nav-logo">
+                <i class="fas fa-camera-retro"></i>
+                <span>Party Planners</span>
+            </a>
+            <div class="nav-menu" id="nav-menu">
+                <a href="#home" class="nav-link active">Home</a>
+                <a href="#about" class="nav-link">About</a>
+                <a href="#services" class="nav-link">Services</a>
+                <a href="#gallery" class="nav-link">Gallery</a>
+                <a href="#contact" class="nav-link">Contact</a>
+                <a href="admin.html" class="nav-link">Admin</a>
+                <a href="#book-event" class="nav-link nav-cta">Book Event</a>
+            </div>
+            <div class="nav-toggle" id="nav-toggle">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-bg"></div>
+        <div class="hero-particles"></div>
+        <div class="hero-content">
+            <div class="hero-badge">
+                <i class="fas fa-star"></i>
+                Premium Event Services
+            </div>
+            <h1 class="hero-title">
+                <span class="gradient-text">Party Planners</span>
+                <span class="hero-subtitle">Global</span>
+            </h1>
+            <p class="hero-tagline">We Capture Moments</p>
+            <p class="hero-description">
+                Transform your special occasions into timeless memories. We specialize in photography,
+                videography, and event promotions that tell your unique story.
+            </p>
+            <div class="hero-buttons">
+                <a href="#book-event" class="btn btn-primary">
+                    <i class="fas fa-calendar-check"></i>
+                    Book Your Event
+                </a>
+                <a href="#services" class="btn btn-secondary">
+                    <i class="fas fa-play-circle"></i>
+                    Explore Services
+                </a>
+            </div>
+
+        </div>
+        <div class="hero-scroll">
+            <a href="#about" class="scroll-down">
+                <i class="fas fa-chevron-down"></i>
+            </a>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="about" id="about">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">Who We Are</span>
+                <h2 class="section-title">About <span class="gradient-text">Party Planners Global</span></h2>
+            </div>
+            <div class="about-grid">
+                <div class="about-content">
+                    <p class="about-lead">
+                        Party Planners Global is an Event Promoter and Entertainment company where we organize
+                        events and create them digitally through Video and Photos.
+                    </p>
+                    <p class="about-text">
+                        We love to travel the world and share our experiences with you. We love documenting
+                        our journey and travels through our videos. We also share our experiences in Travel,
+                        Videography, Food, Adventure, Health, Fitness, Reviews, and things of interest in life.
+                    </p>
+                    <p class="about-text">
+                        We hope you guys will enjoy watching the wonderful experiences that we capture. Our team
+                        of dedicated professionals ensures every moment is preserved with the highest quality and
+                        artistic vision.
+                    </p>
+                    <div class="about-features">
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Professional Equipment</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Experienced Team</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Quick Turnaround</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Affordable Packages</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="about-image">
+                    <div class="image-card">
+                        <img src="gallery/about_us.png" alt="Party Planners Global Team at Work" class="about-img">
+                        <div class="image-overlay"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section class="services" id="services">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">What We Offer</span>
+                <h2 class="section-title">Our <span class="gradient-text">Services</span></h2>
+                <p class="section-description">
+                    From capturing precious moments to creating promotional content, we offer comprehensive
+                    media services tailored to your needs.
+                </p>
+            </div>
+            <div class="services-grid">
+                <div class="service-card" data-aos="fade-up">
+                    <div class="service-icon">
+                        <i class="fas fa-camera"></i>
+                    </div>
+                    <h3 class="service-title">Photography</h3>
+                    <p class="service-description">
+                        Professional photography for all occasions - weddings, parties, corporate events,
+                        and more. Every shot tells a story.
+                    </p>
+
+                </div>
+                <div class="service-card" data-aos="fade-up" data-aos-delay="100">
+                    <div class="service-icon">
+                        <i class="fas fa-video"></i>
+                    </div>
+                    <h3 class="service-title">Videography</h3>
+                    <p class="service-description">
+                        Cinematic video production that captures the essence of your events with
+                        stunning visuals and professional editing.
+                    </p>
+
+                </div>
+                <div class="service-card" data-aos="fade-up" data-aos-delay="200">
+                    <div class="service-icon">
+                        <i class="fas fa-bullhorn"></i>
+                    </div>
+                    <h3 class="service-title">Event Promotions</h3>
+                    <p class="service-description">
+                        Strategic event promotion and marketing to ensure maximum reach and
+                        engagement for your special occasions.
+                    </p>
+
+                </div>
+                <div class="service-card" data-aos="fade-up" data-aos-delay="300">
+                    <div class="service-icon">
+                        <i class="fas fa-film"></i>
+                    </div>
+                    <h3 class="service-title">Promo Video Creation</h3>
+                    <p class="service-description">
+                        Creative promotional videos that showcase your brand, event, or product
+                        with compelling storytelling.
+                    </p>
+
+                </div>
+                <div class="service-card" data-aos="fade-up" data-aos-delay="400">
+                    <div class="service-icon">
+                        <i class="fas fa-magic"></i>
+                    </div>
+                    <h3 class="service-title">Photo Editing</h3>
+                    <p class="service-description">
+                        Professional photo retouching and editing services to enhance your
+                        images to perfection.
+                    </p>
+
+                </div>
+                <div class="service-card" data-aos="fade-up" data-aos-delay="500">
+                    <div class="service-icon">
+                        <i class="fas fa-clapperboard"></i>
+                    </div>
+                    <h3 class="service-title">Film Making</h3>
+                    <p class="service-description">
+                        Full-scale film production from concept to delivery, including
+                        documentaries, short films, and more.
+                    </p>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery Section -->
+    <section class="gallery" id="gallery">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">Our Work</span>
+                <h2 class="section-title">Featured <span class="gradient-text">Gallery</span></h2>
+                <p class="section-description">
+                    Browse through our portfolio of captured moments and creative projects.
+                </p>
+            </div>
+            <div class="gallery-grid" id="gallery-grid">
+                <!-- Wedding Photography - Demo of active slideshow -->
+                <div class="gallery-item large slideshow" data-interval="3000">
+                    <img src="gallery/wedding_1.jpg" alt="Wedding Photography 1" class="active">
+                    <img src="gallery/wedding_2.jpg" alt="Wedding Photography 2">
+                    <img src="gallery/wedding_3.jpg" alt="Wedding Photography 3">
+                    <img src="gallery/wedding_4.jpg" alt="Wedding Photography 4">
+                    <div class="gallery-overlay">
+                        <span>Wedding Photography</span>
+                    </div>
+                </div>
+
+                <!-- House Warming Event - 5 Photo Slideshow -->
+                <div class="gallery-item slideshow" data-interval="3500">
+                    <img src="gallery/house_warming_1.jpg" alt="House Warming 1" class="active">
+                    <img src="gallery/house_warming_2.jpg" alt="House Warming 2">
+                    <img src="gallery/house_warming_3.jpg" alt="House Warming 3">
+                    <img src="gallery/house_warming_4.jpg" alt="House Warming 4">
+                    <img src="gallery/house_warming_5.jpg" alt="House Warming 5">
+                    <div class="gallery-overlay">
+                        <span>House Warming Event</span>
+                    </div>
+                </div>
+
+                <!-- Birthday Celebration - Supabase Dynamic Slideshow -->
+                <div class="gallery-item slideshow" data-interval="4000">
+                    <img src="https://lgitomdfzujzbarbwzyw.supabase.co/storage/v1/object/public/gallery-images/birthday_1.jpg"
+                        alt="Birthday Celebration 1" class="active">
+                    <img src="https://lgitomdfzujzbarbwzyw.supabase.co/storage/v1/object/public/gallery-images/birthday_2.jpg"
+                        alt="Birthday Celebration 2">
+                    <img src="https://lgitomdfzujzbarbwzyw.supabase.co/storage/v1/object/public/gallery-images/birthday_3.jpg"
+                        alt="Birthday Celebration 3">
+                    <img src="https://lgitomdfzujzbarbwzyw.supabase.co/storage/v1/object/public/gallery-images/birthday_4.jpg"
+                        alt="Birthday Celebration 4">
+                    <img src="https://lgitomdfzujzbarbwzyw.supabase.co/storage/v1/object/public/gallery-images/birthday_5.jpg"
+                        alt="Birthday Celebration 5">
+                    <div class="gallery-overlay">
+                        <span>Birthday Celebration</span>
+                    </div>
+                </div>
+
+                <!-- Corporate Event - Supabase Dynamic Slideshow -->
+                <div class="gallery-item slideshow" data-interval="4500">
+                    <img src="https://lgitomdfzujzbarbwzyw.supabase.co/storage/v1/object/public/gallery-images/corporate_1.jpg"
+                        alt="Corporate Event 1" class="active">
+                    <img src="https://lgitomdfzujzbarbwzyw.supabase.co/storage/v1/object/public/gallery-images/corporate_2.jpg"
+                        alt="Corporate Event 2">
+                    <img src="https://lgitomdfzujzbarbwzyw.supabase.co/storage/v1/object/public/gallery-images/corporate_3.jpg"
+                        alt="Corporate Event 3">
+                    <img src="https://lgitomdfzujzbarbwzyw.supabase.co/storage/v1/object/public/gallery-images/corporate_4.jpg"
+                        alt="Corporate Event 4">
+                    <img src="https://lgitomdfzujzbarbwzyw.supabase.co/storage/v1/object/public/gallery-images/corporate_5.jpg"
+                        alt="Corporate Event 5">
+                    <div class="gallery-overlay">
+                        <span>Corporate Event</span>
+                    </div>
+                </div>
+
+                <!-- Ritual Events - Supabase Dynamic Slideshow -->
+                <div class="gallery-item slideshow" data-interval="4000">
+                    <img src="https://lgitomdfzujzbarbwzyw.supabase.co/storage/v1/object/public/gallery-images/ritual_1.jpg"
+                        alt="Ritual Event 1" class="active">
+                    <img src="https://lgitomdfzujzbarbwzyw.supabase.co/storage/v1/object/public/gallery-images/ritual_2.jpg"
+                        alt="Ritual Event 2">
+                    <img src="https://lgitomdfzujzbarbwzyw.supabase.co/storage/v1/object/public/gallery-images/ritual_3.jpg"
+                        alt="Ritual Event 3">
+                    <img src="https://lgitomdfzujzbarbwzyw.supabase.co/storage/v1/object/public/gallery-images/ritual_4.jpg"
+                        alt="Ritual Event 4">
+                    <div class="gallery-overlay">
+                        <span>Ritual Events</span>
+                    </div>
+                </div>
+
+                <!-- Travel Documentary - Supabase Dynamic Slideshow -->
+                <div class="gallery-item large slideshow" data-interval="5000">
+                    <img src="https://lgitomdfzujzbarbwzyw.supabase.co/storage/v1/object/public/gallery-images/travel_1.jpg"
+                        alt="Travel Documentary 1" class="active">
+                    <img src="https://lgitomdfzujzbarbwzyw.supabase.co/storage/v1/object/public/gallery-images/travel_2.jpg"
+                        alt="Travel Documentary 2">
+                    <img src="https://lgitomdfzujzbarbwzyw.supabase.co/storage/v1/object/public/gallery-images/travel_3.jpg"
+                        alt="Travel Documentary 3">
+                    <img src="https://lgitomdfzujzbarbwzyw.supabase.co/storage/v1/object/public/gallery-images/travel_4.jpg"
+                        alt="Travel Documentary 4">
+                    <img src="https://lgitomdfzujzbarbwzyw.supabase.co/storage/v1/object/public/gallery-images/travel_5.jpg"
+                        alt="Travel Documentary 5">
+                    <div class="gallery-overlay">
+                        <span>Travel Documentary</span>
+                    </div>
+                </div>
+
+                <!-- Family Portrait - Supabase Dynamic Slideshow -->
+                <div class="gallery-item slideshow" data-interval="5500">
+                    <img src="https://lgitomdfzujzbarbwzyw.supabase.co/storage/v1/object/public/gallery-images/family_1.jpg"
+                        alt="Family Portrait 1" class="active">
+                    <img src="https://lgitomdfzujzbarbwzyw.supabase.co/storage/v1/object/public/gallery-images/family_2.jpg"
+                        alt="Family Portrait 2">
+                    <img src="https://lgitomdfzujzbarbwzyw.supabase.co/storage/v1/object/public/gallery-images/family_3.jpg"
+                        alt="Family Portrait 3">
+                    <img src="https://lgitomdfzujzbarbwzyw.supabase.co/storage/v1/object/public/gallery-images/family_4.jpg"
+                        alt="Family Portrait 4">
+                    <img src="https://lgitomdfzujzbarbwzyw.supabase.co/storage/v1/object/public/gallery-images/family_5.jpg"
+                        alt="Family Portrait 5">
+                    <div class="gallery-overlay">
+                        <span>Family Portrait</span>
+                    </div>
+                </div>
+            </div>
+            <div class="gallery-cta">
+                <a href="https://www.instagram.com/GlobalPartyPlanners" target="_blank" class="btn btn-primary">
+                    <i class="fab fa-instagram"></i>
+                    View More on Instagram
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="contact" id="contact">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">Get In Touch</span>
+                <h2 class="section-title">Contact <span class="gradient-text">Us</span></h2>
+            </div>
+            <div class="contact-grid">
+                <div class="contact-info">
+                    <h3>Let's Connect</h3>
+                    <p>Have questions or ready to book? Reach out to us through any of these channels.</p>
+
+                    <div class="contact-cards">
+                        <div class="contact-card">
+                            <div class="contact-card-icon">
+                                <i class="fas fa-phone"></i>
+                            </div>
+                            <div class="contact-card-content">
+                                <h4>Phone</h4>
+                                <a href="tel:+19896901234">+1 98 96 90 1234</a>
+                            </div>
+                        </div>
+                        <div class="contact-card">
+                            <div class="contact-card-icon">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                            <div class="contact-card-content">
+                                <h4>Email</h4>
+                                <a href="mailto:PartyPlannersGlobal@gmail.com">PartyPlannersGlobal@gmail.com</a>
+                            </div>
+                        </div>
+                        <div class="contact-card">
+                            <div class="contact-card-icon">
+                                <i class="fab fa-instagram"></i>
+                            </div>
+                            <div class="contact-card-content">
+                                <h4>Instagram</h4>
+                                <a href="https://www.instagram.com/GlobalPartyPlanners"
+                                    target="_blank">@GlobalPartyPlanners</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="social-links">
+                        <h4>Follow Us</h4>
+                        <div class="social-icons">
+                            <a href="https://www.instagram.com/GlobalPartyPlanners" target="_blank" class="social-icon"
+                                aria-label="Instagram">
+                                <i class="fab fa-instagram"></i>
+                            </a>
+                            <a href="https://www.youtube.com/c/Madras2Mumbai" target="_blank" class="social-icon"
+                                aria-label="YouTube">
+                                <i class="fab fa-youtube"></i>
+                            </a>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="contact-form-wrapper">
+                    <form class="contact-form" id="contact-form">
+                        <h3>Send us a Message</h3>
+                        <div class="form-group">
+                            <label for="contact-name">Your Name</label>
+                            <input type="text" id="contact-name" name="name" placeholder="John Doe" required>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="contact-email">Email Address</label>
+                                <input type="email" id="contact-email" name="email" placeholder="john@example.com"
+                                    required>
+                            </div>
+                            <div class="form-group">
+                                <label for="contact-phone">Phone Number</label>
+                                <input type="tel" id="contact-phone" name="phone" placeholder="+1 234 567 890">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="contact-subject">Subject</label>
+                            <input type="text" id="contact-subject" name="subject" placeholder="How can we help?">
+                        </div>
+                        <div class="form-group">
+                            <label for="contact-message">Message</label>
+                            <textarea id="contact-message" name="message" rows="4"
+                                placeholder="Tell us about your event..." required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-full">
+                            <i class="fas fa-paper-plane"></i>
+                            Send Message
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Book Event Section -->
+    <section class="book-event" id="book-event">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">Ready to Book?</span>
+                <h2 class="section-title">Event <span class="gradient-text">Booking Form</span></h2>
+                <p class="section-description">
+                    Fill out the form below with your event details and we'll get back to you within 24 hours.
+                </p>
+            </div>
+            <div class="booking-form-wrapper">
+                <form class="booking-form" id="booking-form">
+                    <div class="form-section">
+                        <h3><i class="fas fa-calendar-alt"></i> Event Details</h3>
+
+                        <div class="form-group">
+                            <label for="event-title">Event Title *</label>
+                            <select id="event-title" name="eventTitle" required>
+                                <option value="">Select Event Type</option>
+                                <option value="House Warming">House Warming</option>
+                                <option value="Dhoti/Saree Function">Dhoti/Saree Function</option>
+                                <option value="Haldi">Haldi</option>
+                                <option value="Wedding">Wedding</option>
+                                <option value="Engagement">Engagement</option>
+                                <option value="Birthday Party">Birthday Party</option>
+                                <option value="Anniversary">Anniversary</option>
+                                <option value="Baby Shower">Baby Shower</option>
+                                <option value="Naming Ceremony">Naming Ceremony</option>
+                                <option value="Puja/Religious Event">Puja/Religious Event</option>
+                                <option value="Corporate Event">Corporate Event</option>
+                                <option value="Other">Other (Specify in Special Needs)</option>
+                            </select>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="event-date">Date *</label>
+                                <input type="date" id="event-date" name="eventDate" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="event-time">Time *</label>
+                                <input type="time" id="event-time" name="eventTime" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h3><i class="fas fa-home"></i> Venue Information</h3>
+
+                        <div class="form-group">
+                            <label for="event-address">Address *</label>
+                            <textarea id="event-address" name="address" rows="2"
+                                placeholder="Full address including city, state, zip code" required></textarea>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="home-name">Home Name</label>
+                                <input type="text" id="home-name" name="homeName" placeholder="e.g., Villa Sunshine">
+                            </div>
+                            <div class="form-group">
+                                <label for="gate-code">Gate Code to Enter Community</label>
+                                <input type="text" id="gate-code" name="gateCode" placeholder="e.g., #1234">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="wifi-username">Wi-Fi Username</label>
+                                <input type="text" id="wifi-username" name="wifiUsername" placeholder="Network name">
+                            </div>
+                            <div class="form-group">
+                                <label for="wifi-password">Wi-Fi Password</label>
+                                <input type="text" id="wifi-password" name="wifiPassword" placeholder="Password">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="home-photo">Photo of the Home</label>
+                            <div class="file-upload" id="file-upload-area">
+                                <input type="file" id="home-photo" name="homePhoto" accept="image/*">
+                                <div class="file-upload-content" id="upload-content">
+                                    <i class="fas fa-cloud-upload-alt"></i>
+                                    <span>Click to upload or drag and drop</span>
+                                    <small>PNG, JPG, JPEG up to 10MB</small>
+                                </div>
+                                <div class="file-preview" id="file-preview" style="display: none;">
+                                    <img id="preview-image" src="" alt="Preview">
+                                    <button type="button" class="remove-file" id="remove-file" title="Remove photo">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h3><i class="fas fa-users"></i> People Information</h3>
+
+                        <div class="form-group">
+                            <label for="family-members">Family Members Names *</label>
+                            <textarea id="family-members" name="familyMembers" rows="3"
+                                placeholder="List all family members to be featured" required></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="compliments-names">Best Compliments (Family/Friends Names)</label>
+                            <textarea id="compliments-names" name="complimentsNames" rows="3"
+                                placeholder="Names of family or friends to give compliments"></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="pandit-details">Pandit Ji's Name with Temple</label>
+                            <input type="text" id="pandit-details" name="panditDetails"
+                                placeholder="e.g., Pandit Sharma from XYZ Temple">
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h3><i class="fas fa-star"></i> Special Requests</h3>
+
+                        <div class="form-group">
+                            <label for="highlights">Highlights or Special Things to Cover</label>
+                            <textarea id="highlights" name="highlights" rows="3"
+                                placeholder="Any specific moments or rituals you want us to focus on"></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="special-needs">Special Needs or Additional Information</label>
+                            <textarea id="special-needs" name="specialNeeds" rows="3"
+                                placeholder="Any special requirements, dietary restrictions, accessibility needs, etc."></textarea>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary btn-large">
+                            <i class="fas fa-paper-plane"></i>
+                            Submit Booking Request
+                        </button>
+                        <p class="form-note">
+                            <i class="fas fa-info-circle"></i>
+                            We'll contact you within 24 hours to confirm your booking
+                        </p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <a href="#home" class="footer-logo">
+                        <i class="fas fa-camera-retro"></i>
+                        <span>Party Planners Global</span>
+                    </a>
+                    <p>We Capture Moments</p>
+                    <p class="footer-description">
+                        Your trusted partner for event photography, videography, and entertainment services.
+                    </p>
+                </div>
+                <div class="footer-links">
+                    <h4>Quick Links</h4>
+                    <a href="#home">Home</a>
+                    <a href="#about">About Us</a>
+                    <a href="#services">Services</a>
+                    <a href="#gallery">Gallery</a>
+                    <a href="#contact">Contact</a>
+                    <a href="#book-event">Book Event</a>
+                </div>
+                <div class="footer-services">
+                    <h4>Services</h4>
+                    <a href="#services">Photography</a>
+                    <a href="#services">Videography</a>
+                    <a href="#services">Event Promotions</a>
+                    <a href="#services">Promo Videos</a>
+                    <a href="#services">Photo Editing</a>
+                    <a href="#services">Film Making</a>
+                </div>
+                <div class="footer-contact">
+                    <h4>Contact Info</h4>
+                    <a href="tel:+19896901234">
+                        <i class="fas fa-phone"></i>
+                        +1 98 96 90 1234
+                    </a>
+                    <a href="mailto:PartyPlannersGlobal@gmail.com">
+                        <i class="fas fa-envelope"></i>
+                        PartyPlannersGlobal@gmail.com
+                    </a>
+                    <a href="https://www.instagram.com/GlobalPartyPlanners" target="_blank">
+                        <i class="fab fa-instagram"></i>
+                        @GlobalPartyPlanners
+                    </a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <div class="footer-social">
+                    <a href="https://www.instagram.com/GlobalPartyPlanners" target="_blank" aria-label="Instagram">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="https://www.youtube.com/c/Madras2Mumbai" target="_blank" aria-label="YouTube">
+                        <i class="fab fa-youtube"></i>
+                    </a>
+                </div>
+                <p class="copyright">
+                    &copy; 2024 Party Planners Global. All Rights Reserved.
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">
+        <div class="toast-content">
+            <i class="fas fa-check-circle"></i>
+            <span id="toast-message">Message sent successfully!</span>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="supabase-config.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>

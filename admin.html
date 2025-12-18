@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | Party Planners Global</title>
+    <meta name="robots" content="noindex, nofollow">
+
+    <!-- Google Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700;800&display=swap"
+        rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="admin.css">
+
+    <!-- Supabase JS -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+</head>
+
+<body class="admin-page">
+    <!-- Login Gate -->
+    <div id="login-overlay" class="login-overlay">
+        <div class="login-card">
+            <div class="login-header">
+                <i class="fas fa-lock-open"></i>
+                <h2>Admin Login</h2>
+                <p>Private access for Party Planners</p>
+            </div>
+            <form id="admin-login-form">
+                <div class="form-group">
+                    <label for="admin-id">Admin ID</label>
+                    <input type="text" id="admin-id" required placeholder="Enter Admin ID">
+                </div>
+                <div class="form-group">
+                    <label for="admin-pass">Password</label>
+                    <div class="password-wrapper">
+                        <input type="password" id="admin-pass" required placeholder="••••••••">
+                        <i class="fas fa-eye toggle-password" id="toggle-password"></i>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary btn-full">Login</button>
+            </form>
+            <div id="login-error" class="login-error" style="display: none;">
+                Invalid credentials. Please try again.
+            </div>
+            <a href="index.html" class="back-link"><i class="fas fa-arrow-left"></i> Back to Website</a>
+        </div>
+    </div>
+
+    <!-- Admin Dashboard (Hidden by default) -->
+    <div id="admin-dashboard" class="admin-dashboard" style="display: none;">
+        <nav class="admin-nav">
+            <div class="container nav-flex">
+                <div class="admin-logo">
+                    <i class="fas fa-camera-retro"></i>
+                    <span>Admin Panel</span>
+                </div>
+                <div class="dashboard-tabs">
+                    <button class="tab-btn active" data-tab="contacts">Contacts</button>
+                    <button class="tab-btn" data-tab="bookings">Bookings</button>
+                </div>
+                <button id="logout-btn" class="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </div>
+        </nav>
+
+        <main class="container admin-main">
+            <!-- Contacts Tab -->
+            <section id="contacts-tab" class="tab-content active">
+                <div class="tab-header">
+                    <h2>Customer Inquiries</h2>
+                    <button class="refresh-btn" id="refresh-contacts"><i class="fas fa-sync"></i> Refresh</button>
+                </div>
+                <div class="table-container">
+                    <table id="contacts-table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>Subject</th>
+                                <th>Message</th>
+                            </tr>
+                        </thead>
+                        <tbody id="contacts-body">
+                            <!-- Data populated by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Bookings Tab -->
+            <section id="bookings-tab" class="tab-content">
+                <div class="tab-header">
+                    <h2>Event Bookings</h2>
+                    <button class="refresh-btn" id="refresh-bookings"><i class="fas fa-sync"></i> Refresh</button>
+                </div>
+                <div class="table-container">
+                    <table id="bookings-table">
+                        <thead>
+                            <tr>
+                                <th>Date Submitted</th>
+                                <th>Event Title</th>
+                                <th>Event Type</th>
+                                <th>Event Date & Time</th>
+                                <th>Venue Details</th>
+                                <th>Client Details</th>
+                                <th>Special Needs</th>
+                                <th>Home Photo</th>
+                            </tr>
+                        </thead>
+                        <tbody id="bookings-body">
+                            <!-- Data populated by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Toast Modal -->
+    <div class="toast" id="admin-toast">
+        <div class="toast-content">
+            <i class="fas fa-info-circle"></i>
+            <span id="toast-text"></span>
+        </div>
+    </div>
+
+    <script src="supabase-config.js"></script>
+    <script src="admin.js"></script>
+</body>
+
+</html>
