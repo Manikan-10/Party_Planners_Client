@@ -22,6 +22,7 @@ document.addEventListener('DOMContentLoaded', function () {
     initScrollSpy();
     initFormValidation();
     initFormCache(); // Add form caching
+    initDynamicContent(); // Load admin-editable content
 });
 
 /* ============================================
@@ -183,7 +184,7 @@ function initScrollAnimations() {
             }
         });
     }, {
-        threshold: 0.15,
+        threshold: 0.01,
         rootMargin: '0px 0px -60px 0px'
     });
 
@@ -866,3 +867,168 @@ document.addEventListener('DOMContentLoaded', function () {
     initGallerySlideshows();
     // initParallax(); // Uncomment if parallax effect is desired
 });
+
+/* ============================================
+   Dynamic Content Loading (Admin CMS)
+   ============================================ */
+function initDynamicContent() {
+    try {
+        const storedContent = localStorage.getItem('website_content');
+        if (!storedContent) return; // No custom content, use defaults
+
+        const content = JSON.parse(storedContent);
+
+        // Apply Hero Section
+        if (content.hero) {
+            const heroBadge = document.querySelector('.hero-badge');
+            const heroTitle = document.querySelector('.hero-title .gradient-text');
+            const heroSubtitle = document.querySelector('.hero-title .hero-subtitle');
+            const heroTagline = document.querySelector('.hero-tagline');
+            const heroDescription = document.querySelector('.hero-description');
+
+            if (heroBadge && content.hero.badge) {
+                heroBadge.innerHTML = `<i class="fas fa-star"></i> ${content.hero.badge}`;
+            }
+            if (heroTitle && content.hero.title) heroTitle.textContent = content.hero.title;
+            if (heroSubtitle && content.hero.subtitle) heroSubtitle.textContent = content.hero.subtitle;
+            if (heroTagline && content.hero.tagline) heroTagline.textContent = content.hero.tagline;
+            if (heroDescription && content.hero.description) heroDescription.textContent = content.hero.description;
+        }
+
+        // Apply About Section
+        if (content.about) {
+            const aboutLead = document.querySelector('.about-lead');
+            const aboutTexts = document.querySelectorAll('.about-text');
+            const aboutImg = document.querySelector('.about-img');
+
+            if (aboutLead && content.about.lead) aboutLead.textContent = content.about.lead;
+            if (aboutTexts[0] && content.about.text1) aboutTexts[0].textContent = content.about.text1;
+            if (aboutTexts[1] && content.about.text2) aboutTexts[1].textContent = content.about.text2;
+            if (aboutImg && content.about.image) aboutImg.src = content.about.image;
+        }
+
+        // Apply Services Section
+        if (content.services && Array.isArray(content.services)) {
+            const serviceCards = document.querySelectorAll('.service-card');
+            content.services.forEach((service, index) => {
+                if (serviceCards[index]) {
+                    const titleEl = serviceCards[index].querySelector('.service-title');
+                    const descEl = serviceCards[index].querySelector('.service-description');
+                    if (titleEl && service.title) titleEl.textContent = service.title;
+                    if (descEl && service.desc) descEl.textContent = service.desc;
+                }
+            });
+        }
+
+        // Apply Contact Section
+        if (content.contact) {
+            // Update phone links
+            const phoneLinks = document.querySelectorAll('a[href^="tel:"]');
+            if (content.contact.phone) {
+                const phoneClean = content.contact.phone.replace(/\s/g, '');
+                phoneLinks.forEach(link => {
+                    link.href = `tel:${phoneClean}`;
+                    if (link.closest('.contact-card-content') || link.closest('.footer-contact')) {
+                        link.textContent = content.contact.phone;
+                    }
+                });
+            }
+
+            // Update email links
+            const emailLinks = document.querySelectorAll('a[href^="mailto:"]');
+            if (content.contact.email) {
+                emailLinks.forEach(link => {
+                    link.href = `mailto:${content.contact.email}`;
+                    if (link.closest('.contact-card-content') || link.closest('.footer-contact')) {
+                        link.textContent = content.contact.email;
+                    }
+                });
+            }
+
+            // Update Instagram links
+            const instagramLinks = document.querySelectorAll('a[href*="instagram.com"]');
+            if (content.contact.instagramUrl) {
+                instagramLinks.forEach(link => {
+                    link.href = content.contact.instagramUrl;
+                    if (link.closest('.contact-card-content') || link.closest('.footer-contact')) {
+                        const textNode = link.querySelector('span') || link;
+                        if (content.contact.instagram && !link.querySelector('i:only-child')) {
+                            // Update display text but not icon-only links
+                            if (link.closest('.contact-card-content')) {
+                                link.textContent = content.contact.instagram;
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Update YouTube links  
+            const youtubeLinks = document.querySelectorAll('a[href*="youtube.com"]');
+            if (content.contact.youtube) {
+                youtubeLinks.forEach(link => {
+                    link.href = content.contact.youtube;
+                });
+            }
+        }
+
+        // ===== GALLERY SECTION =====
+        if (content.gallery) {
+            const galleryGrid = document.getElementById('gallery-grid');
+            if (galleryGrid) {
+                // Clear existing content
+                galleryGrid.innerHTML = '';
+
+                const categories = [
+                    { key: 'wedding', label: 'Wedding Photography', data: content.gallery.wedding },
+                    { key: 'housewarming', label: 'House Warming', data: content.gallery.housewarming },
+                    { key: 'birthday', label: 'Birthday Celebration', data: content.gallery.birthday },
+                    { key: 'corporate', label: 'Corporate Event', data: content.gallery.corporate }
+                ];
+
+                categories.forEach((category, index) => {
+                    if (category.data) {
+                        const urls = category.data.split(',').map(u => u.trim()).filter(u => u);
+
+                        if (urls.length > 0) {
+                            // Create gallery item (slideshow if multiple images)
+                            const galleryItem = document.createElement('div');
+                            galleryItem.className = urls.length > 1 ? 'gallery-item large slideshow' : 'gallery-item large';
+                            if (urls.length > 1) {
+                                galleryItem.setAttribute('data-interval', '3000');
+                            }
+
+                            // Add images
+                            urls.forEach((url, imgIndex) => {
+                                const img = document.createElement('img');
+                                img.src = url;
+                                img.alt = `${category.label} ${imgIndex + 1}`;
+                                img.loading = 'lazy';
+                                if (imgIndex === 0) {
+                                    img.classList.add('active');
+                                }
+                                galleryItem.appendChild(img);
+                            });
+
+                            // Add category label
+                            const label = document.createElement('div');
+                            label.className = 'gallery-label';
+                            label.textContent = category.label;
+                            galleryItem.appendChild(label);
+
+                            galleryGrid.appendChild(galleryItem);
+                        }
+                    }
+                });
+
+                // Re-initialize gallery slideshows after adding new content
+                if (typeof initGallerySlideshows === 'function') {
+                    initGallerySlideshows();
+                }
+            }
+        }
+
+        console.log('Dynamic content loaded successfully');
+    } catch (error) {
+        console.warn('Could not load dynamic content:', error);
+    }
+}

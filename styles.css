@@ -676,8 +676,8 @@ img {
 
 .gallery-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 30px;
     margin-bottom: 40px;
 }
 
@@ -691,8 +691,8 @@ img {
 }
 
 .gallery-item.large {
-    grid-column: span 2;
-    aspect-ratio: 2/1;
+    /* In 2-column layout, each item naturally takes 1 column */
+    aspect-ratio: 16/10;
 }
 
 .gallery-item:hover {

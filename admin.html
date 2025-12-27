@@ -64,6 +64,7 @@
                 <div class="dashboard-tabs">
                     <button class="tab-btn active" data-tab="contacts">Contacts</button>
                     <button class="tab-btn" data-tab="bookings">Bookings</button>
+                    <button class="tab-btn" data-tab="web-content">Web Content</button>
                 </div>
                 <button id="logout-btn" class="logout-btn">
                     <i class="fas fa-sign-out-alt"></i> Logout
@@ -88,6 +89,7 @@
                                 <th>Phone</th>
                                 <th>Subject</th>
                                 <th>Message</th>
+                                <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody id="contacts-body">
@@ -115,12 +117,325 @@
                                 <th>Client Details</th>
                                 <th>Special Needs</th>
                                 <th>Home Photo</th>
+                                <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody id="bookings-body">
                             <!-- Data populated by JS -->
                         </tbody>
                     </table>
+                </div>
+            </section>
+
+            <!-- Web Content Management Tab -->
+            <section id="web-content-tab" class="tab-content">
+                <div class="tab-header">
+                    <h2>Website Content Management</h2>
+                    <button class="refresh-btn" id="reset-content"><i class="fas fa-undo"></i> Reset to Default</button>
+                </div>
+
+                <!-- Content Sub-tabs -->
+                <div class="content-subtabs">
+                    <button class="subtab-btn active" data-subtab="hero">Hero Section</button>
+                    <button class="subtab-btn" data-subtab="about">About</button>
+                    <button class="subtab-btn" data-subtab="services">Services</button>
+                    <button class="subtab-btn" data-subtab="contact">Contact</button>
+                    <button class="subtab-btn" data-subtab="gallery">Gallery</button>
+                </div>
+
+                <!-- Hero Section Editor -->
+                <div id="hero-subtab" class="subtab-content active">
+                    <div class="content-card">
+                        <h3><i class="fas fa-home"></i> Hero Section</h3>
+                        <form id="hero-form" class="content-form">
+                            <div class="form-group">
+                                <label for="hero-badge">Badge Text</label>
+                                <input type="text" id="hero-badge" placeholder="Premium Event Services">
+                            </div>
+                            <div class="form-group">
+                                <label for="hero-title">Main Title</label>
+                                <input type="text" id="hero-title" placeholder="Party Planners">
+                            </div>
+                            <div class="form-group">
+                                <label for="hero-subtitle">Subtitle</label>
+                                <input type="text" id="hero-subtitle" placeholder="Global">
+                            </div>
+                            <div class="form-group">
+                                <label for="hero-tagline">Tagline</label>
+                                <input type="text" id="hero-tagline" placeholder="We Capture Moments">
+                            </div>
+                            <div class="form-group">
+                                <label for="hero-description">Description</label>
+                                <textarea id="hero-description" rows="3"
+                                    placeholder="Transform your special occasions..."></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Save Hero Section
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- About Section Editor -->
+                <div id="about-subtab" class="subtab-content">
+                    <div class="content-card">
+                        <h3><i class="fas fa-info-circle"></i> About Section</h3>
+                        <form id="about-form" class="content-form">
+                            <div class="form-group">
+                                <label for="about-lead">Lead Paragraph</label>
+                                <textarea id="about-lead" rows="3"
+                                    placeholder="Party Planners Global is an Event Promoter..."></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="about-text1">Second Paragraph</label>
+                                <textarea id="about-text1" rows="3"
+                                    placeholder="We love to travel the world..."></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="about-text2">Third Paragraph</label>
+                                <textarea id="about-text2" rows="3"
+                                    placeholder="We hope you guys will enjoy..."></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label>About Image</label>
+                                <div class="image-upload-area" id="about-image-upload">
+                                    <input type="file" id="about-image-file" accept="image/*" style="display:none;">
+                                    <div class="upload-placeholder" id="about-upload-placeholder">
+                                        <i class="fas fa-cloud-upload-alt"></i>
+                                        <span>Click or drag image here</span>
+                                        <small>PNG, JPG up to 15MB</small>
+                                    </div>
+                                    <div class="upload-preview" id="about-upload-preview" style="display:none;">
+                                        <img id="about-preview-img" src="" alt="Preview">
+                                        <button type="button" class="remove-upload" id="about-remove-btn">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <input type="hidden" id="about-image" value="gallery/about_us.png">
+                            </div>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Save About Section
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Services Section Editor -->
+                <div id="services-subtab" class="subtab-content">
+                    <div class="content-card">
+                        <h3><i class="fas fa-cogs"></i> Services Section</h3>
+                        <form id="services-form" class="content-form">
+                            <div class="services-editor">
+                                <!-- Service 1 -->
+                                <div class="service-edit-card">
+                                    <h4><i class="fas fa-camera"></i> Photography</h4>
+                                    <div class="form-group">
+                                        <label>Title</label>
+                                        <input type="text" id="service1-title" value="Photography">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Description</label>
+                                        <textarea id="service1-desc" rows="2"></textarea>
+                                    </div>
+                                </div>
+                                <!-- Service 2 -->
+                                <div class="service-edit-card">
+                                    <h4><i class="fas fa-video"></i> Videography</h4>
+                                    <div class="form-group">
+                                        <label>Title</label>
+                                        <input type="text" id="service2-title" value="Videography">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Description</label>
+                                        <textarea id="service2-desc" rows="2"></textarea>
+                                    </div>
+                                </div>
+                                <!-- Service 3 -->
+                                <div class="service-edit-card">
+                                    <h4><i class="fas fa-bullhorn"></i> Event Promotions</h4>
+                                    <div class="form-group">
+                                        <label>Title</label>
+                                        <input type="text" id="service3-title" value="Event Promotions">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Description</label>
+                                        <textarea id="service3-desc" rows="2"></textarea>
+                                    </div>
+                                </div>
+                                <!-- Service 4 -->
+                                <div class="service-edit-card">
+                                    <h4><i class="fas fa-film"></i> Promo Video Creation</h4>
+                                    <div class="form-group">
+                                        <label>Title</label>
+                                        <input type="text" id="service4-title" value="Promo Video Creation">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Description</label>
+                                        <textarea id="service4-desc" rows="2"></textarea>
+                                    </div>
+                                </div>
+                                <!-- Service 5 -->
+                                <div class="service-edit-card">
+                                    <h4><i class="fas fa-magic"></i> Photo Editing</h4>
+                                    <div class="form-group">
+                                        <label>Title</label>
+                                        <input type="text" id="service5-title" value="Photo Editing">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Description</label>
+                                        <textarea id="service5-desc" rows="2"></textarea>
+                                    </div>
+                                </div>
+                                <!-- Service 6 -->
+                                <div class="service-edit-card">
+                                    <h4><i class="fas fa-clapperboard"></i> Film Making</h4>
+                                    <div class="form-group">
+                                        <label>Title</label>
+                                        <input type="text" id="service6-title" value="Film Making">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Description</label>
+                                        <textarea id="service6-desc" rows="2"></textarea>
+                                    </div>
+                                </div>
+                                <!-- Service 7 -->
+                                <div class="service-edit-card">
+                                    <h4><i class="fas fa-paint-brush"></i> Business Branding</h4>
+                                    <div class="form-group">
+                                        <label>Title</label>
+                                        <input type="text" id="service7-title" value="Business Branding">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Description</label>
+                                        <textarea id="service7-desc" rows="2"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Save All Services
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Contact Section Editor -->
+                <div id="contact-subtab" class="subtab-content">
+                    <div class="content-card">
+                        <h3><i class="fas fa-address-book"></i> Contact Information</h3>
+                        <form id="contact-form-admin" class="content-form">
+                            <div class="form-group">
+                                <label for="contact-phone">Phone Number</label>
+                                <input type="text" id="contact-phone" placeholder="+1 98 96 90 1234">
+                            </div>
+                            <div class="form-group">
+                                <label for="contact-email">Email Address</label>
+                                <input type="email" id="contact-email-admin"
+                                    placeholder="PartyPlannersGlobal@gmail.com">
+                            </div>
+                            <div class="form-group">
+                                <label for="contact-instagram">Instagram Handle</label>
+                                <input type="text" id="contact-instagram" placeholder="@GlobalPartyPlanners">
+                            </div>
+                            <div class="form-group">
+                                <label for="contact-instagram-url">Instagram URL</label>
+                                <input type="url" id="contact-instagram-url"
+                                    placeholder="https://www.instagram.com/GlobalPartyPlanners">
+                            </div>
+                            <div class="form-group">
+                                <label for="contact-youtube">YouTube URL</label>
+                                <input type="url" id="contact-youtube"
+                                    placeholder="https://www.youtube.com/c/Madras2Mumbai">
+                            </div>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Save Contact Info
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Gallery Section Editor -->
+                <div id="gallery-subtab" class="subtab-content">
+                    <div class="content-card">
+                        <h3><i class="fas fa-images"></i> Gallery Management</h3>
+                        <p class="info-text">
+                            <i class="fas fa-info-circle"></i>
+                            <strong>Note:</strong> Gallery images auto-save immediately upon upload - <strong>no Save
+                                button needed</strong>. Changes in other tabs (Hero, About, Services, Contact) require
+                            clicking Save.
+                        </p>
+
+                        <div class="gallery-upload-grid">
+                            <!-- Wedding Photography Upload -->
+                            <div class="gallery-upload-card">
+                                <h4><i class="fas fa-heart"></i> Wedding Photography</h4>
+                                <div class="gallery-drop-zone" data-category="wedding">
+                                    <input type="file" class="gallery-file-input" data-category="wedding"
+                                        accept="image/*" multiple style="display:none;">
+                                    <div class="drop-placeholder">
+                                        <i class="fas fa-cloud-upload-alt"></i>
+                                        <span>Drop images or click to upload</span>
+                                        <small>Multiple files allowed</small>
+                                    </div>
+                                </div>
+                                <div class="gallery-preview-grid" id="wedding-preview"></div>
+                                <div class="upload-progress" id="wedding-progress" style="display:none;">
+                                    <div class="progress-bar">
+                                        <div class="progress-fill"></div>
+                                    </div>
+                                    <span class="progress-text">Uploading...</span>
+                                </div>
+                            </div>
+
+                            <!-- House Warming Upload -->
+                            <div class="gallery-upload-card">
+                                <h4><i class="fas fa-home"></i> House Warming Event</h4>
+                                <div class="gallery-drop-zone" data-category="housewarming">
+                                    <input type="file" class="gallery-file-input" data-category="housewarming"
+                                        accept="image/*" multiple style="display:none;">
+                                    <div class="drop-placeholder">
+                                        <i class="fas fa-cloud-upload-alt"></i>
+                                        <span>Drop images or click to upload</span>
+                                        <small>Multiple files allowed</small>
+                                    </div>
+                                </div>
+                                <div class="gallery-preview-grid" id="housewarming-preview"></div>
+                                <div class="upload-progress" id="housewarming-progress" style="display:none;"></div>
+                            </div>
+
+                            <!-- Birthday Celebration Upload -->
+                            <div class="gallery-upload-card">
+                                <h4><i class="fas fa-birthday-cake"></i> Birthday Celebration</h4>
+                                <div class="gallery-drop-zone" data-category="birthday">
+                                    <input type="file" class="gallery-file-input" data-category="birthday"
+                                        accept="image/*" multiple style="display:none;">
+                                    <div class="drop-placeholder">
+                                        <i class="fas fa-cloud-upload-alt"></i>
+                                        <span>Drop images or click to upload</span>
+                                        <small>Multiple files allowed</small>
+                                    </div>
+                                </div>
+                                <div class="gallery-preview-grid" id="birthday-preview"></div>
+                                <div class="upload-progress" id="birthday-progress" style="display:none;"></div>
+                            </div>
+
+                            <!-- Corporate Event Upload -->
+                            <div class="gallery-upload-card">
+                                <h4><i class="fas fa-briefcase"></i> Corporate Event</h4>
+                                <div class="gallery-drop-zone" data-category="corporate">
+                                    <input type="file" class="gallery-file-input" data-category="corporate"
+                                        accept="image/*" multiple style="display:none;">
+                                    <div class="drop-placeholder">
+                                        <i class="fas fa-cloud-upload-alt"></i>
+                                        <span>Drop images or click to upload</span>
+                                        <small>Multiple files allowed</small>
+                                    </div>
+                                </div>
+                                <div class="gallery-preview-grid" id="corporate-preview"></div>
+                                <div class="upload-progress" id="corporate-progress" style="display:none;"></div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </section>
         </main>
