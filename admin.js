@@ -108,7 +108,8 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log("Fetching dashboard data...");
         await Promise.all([
             fetchContacts(silent),
-            fetchBookings(silent)
+            fetchBookings(silent),
+            fetchReviews(silent)
         ]);
     }
 
@@ -153,6 +154,23 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (err) {
             console.error("Error fetching bookings:", err);
             if (!silent) showAdminToast("Failed to load bookings", true);
+        }
+    }
+
+    async function fetchReviews(silent = false) {
+        if (!window.fetchReviews) {
+            console.warn("fetchReviews function not found. Check supabase-config.js");
+            return;
+        }
+
+        if (!silent) showAdminToast("Refreshing reviews...");
+        try {
+            const data = await window.fetchReviews();
+            renderReviews(data);
+            if (!silent) showAdminToast("Reviews updated!");
+        } catch (err) {
+            console.error("Error fetching reviews:", err);
+            if (!silent) showAdminToast("Failed to load reviews", true);
         }
     }
 
@@ -220,6 +238,40 @@ document.addEventListener('DOMContentLoaded', () => {
     `).join('');
     }
 
+    function renderReviews(reviews) {
+        const tbody = document.getElementById('reviews-body');
+        if (!tbody) return;
+
+        if (!reviews || reviews.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;">No reviews found.</td></tr>';
+            return;
+        }
+
+        tbody.innerHTML = reviews.map(r => {
+            // Count event images
+            const eventImages = [r.image_url_1, r.image_url_2, r.image_url_3].filter(url => url);
+            const imagesHtml = eventImages.length > 0
+                ? `<div style="display: flex; gap: 5px;">${eventImages.map(url => `<img src="${url}" style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px; cursor: pointer;" onclick="window.open('${url}', '_blank')">`).join('')}</div>`
+                : 'No images';
+
+            return `
+        <tr>
+            <td>${new Date(r.created_at).toLocaleDateString()}</td>
+            <td>${escapeHtml(r.name)}</td>
+            <td>${escapeHtml(r.location || 'N/A')}</td>
+            <td>${'★'.repeat(r.rating)}${'☆'.repeat(5 - r.rating)}</td>
+            <td style="max-width: 250px; white-space: normal;">${escapeHtml(r.review_text)}</td>
+            <td>${imagesHtml}</td>
+            <td>
+                <button class="delete-btn" onclick="deleteReviewHandler('${r.id}')" title="Delete this review">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </td>
+        </tr>
+    `;
+        }).join('');
+    }
+
     // --- Delete Logic ---
     async function deleteContact(id) {
         if (!confirm('Are you sure you want to delete this contact inquiry?')) return;
@@ -267,13 +319,109 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    async function deleteReviewHandler(id) {
+        if (!confirm('Are you sure you want to delete this review?')) return;
+
+        showAdminToast("Deleting review...");
+        try {
+            const success = await window.deleteReview(id);
+            if (success) {
+                showAdminToast("Review deleted successfully!");
+                fetchReviews(true);
+            } else {
+                throw new Error("Delete failed");
+            }
+        } catch (err) {
+            console.error("Error deleting review:", err);
+            showAdminToast("Failed to delete review", true);
+        }
+    }
+
     // Expose delete functions globally for onclick handlers
     window.deleteContact = deleteContact;
     window.deleteBooking = deleteBooking;
+    window.deleteReviewHandler = deleteReviewHandler;
 
     // Refresh Buttons
     document.getElementById('refresh-contacts')?.addEventListener('click', () => fetchContacts());
     document.getElementById('refresh-bookings')?.addEventListener('click', () => fetchBookings());
+    document.getElementById('refresh-reviews')?.addEventListener('click', () => fetchReviews());
+
+    // Add Review Form Handler
+    const addReviewForm = document.getElementById('add-review-form');
+    const reviewImagesInput = document.getElementById('review-images');
+    const reviewImagesPreview = document.getElementById('review-images-preview');
+
+    // Preview event images
+    if (reviewImagesInput) {
+        reviewImagesInput.addEventListener('change', function() {
+            reviewImagesPreview.innerHTML = '';
+            const files = Array.from(this.files).slice(0, 3); // Max 3 images
+            
+            files.forEach((file, index) => {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const div = document.createElement('div');
+                    div.className = 'gallery-preview-item';
+                    div.innerHTML = `<img src="${e.target.result}" alt="Preview ${index + 1}">`;
+                    reviewImagesPreview.appendChild(div);
+                };
+                reader.readAsDataURL(file);
+            });
+        });
+    }
+
+    if (addReviewForm) {
+        addReviewForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const name = document.getElementById('review-name').value;
+            const location = document.getElementById('review-location').value;
+            const rating = document.getElementById('review-rating').value;
+            const text = document.getElementById('review-text').value;
+            const photoInput = document.getElementById('review-photo');
+            const imagesInput = document.getElementById('review-images');
+
+            showAdminToast("Adding review...");
+
+            try {
+                let photoUrl = null;
+                if (photoInput.files.length > 0) {
+                    photoUrl = await window.uploadFileToSupabase(photoInput.files[0], 'review-photos');
+                }
+
+                // Upload up to 3 event images
+                const imageUrls = [null, null, null];
+                if (imagesInput.files.length > 0) {
+                    const files = Array.from(imagesInput.files).slice(0, 3);
+                    for (let i = 0; i < files.length; i++) {
+                        imageUrls[i] = await window.uploadFileToSupabase(files[i], 'review-photos');
+                    }
+                }
+
+                const reviewData = {
+                    name: name,
+                    location: location,
+                    rating: parseInt(rating),
+                    review_text: text,
+                    photo_url: photoUrl,
+                    image_url_1: imageUrls[0],
+                    image_url_2: imageUrls[1],
+                    image_url_3: imageUrls[2]
+                };
+
+                await window.addReview(reviewData);
+
+                showAdminToast("Review added successfully!");
+                addReviewForm.reset();
+                reviewImagesPreview.innerHTML = '';
+                fetchReviews(true);
+            } catch (err) {
+                console.error("Error adding review:", err);
+                showAdminToast("Failed to add review", true);
+            }
+        });
+    }
 
     // Helper: Escape HTML to prevent XSS
     function escapeHtml(text) {
@@ -594,8 +742,35 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- Gallery Upload Handlers ---
-    const galleryCategories = ['wedding', 'housewarming', 'birthday', 'corporate'];
-    const galleryImages = { wedding: [], housewarming: [], birthday: [], corporate: [] };
+    const galleryCategories = ['wedding', 'engagement', 'anniversary', 'housewarming', 'birthday', 'family', 'travel', 'corporate'];
+    const galleryImages = { wedding: [], engagement: [], anniversary: [], housewarming: [], birthday: [], family: [], travel: [], corporate: [] };
+
+    // Load existing gallery images from localStorage on page init
+    function loadExistingGalleryData() {
+        const stored = localStorage.getItem('website_content');
+        if (stored) {
+            try {
+                const content = JSON.parse(stored);
+                if (content.gallery) {
+                    galleryCategories.forEach(cat => {
+                        if (content.gallery[cat]) {
+                            const urls = content.gallery[cat]
+                                .split(',')
+                                .map(u => u.trim())
+                                .filter(u => u && u.length > 0);
+                            galleryImages[cat] = urls;
+                            console.log(`✅ Loaded ${urls.length} existing ${cat} images from localStorage`);
+                        }
+                    });
+                }
+            } catch (err) {
+                console.warn('Could not load existing gallery data:', err);
+            }
+        }
+    }
+
+    // Initialize with existing data
+    loadExistingGalleryData();
 
     // Initialize gallery drop zones
     galleryCategories.forEach(category => {
@@ -679,10 +854,17 @@ document.addEventListener('DOMContentLoaded', () => {
             previewItem.appendChild(removeBtn);
             previewGrid.appendChild(previewItem);
 
-            // Upload to Supabase
+            // Upload to Supabase with category in filename
             if (typeof uploadFileToSupabase === 'function') {
                 try {
-                    const url = await uploadFileToSupabase(file, 'gallery-images');
+                    // Create filename with category prefix
+                    const fileExt = file.name.split('.').pop();
+                    const categoryPrefix = category;
+                    const timestamp = Date.now();
+                    const randomStr = Math.random().toString(36).substring(7);
+                    const customFileName = `${categoryPrefix}_${timestamp}_${randomStr}.${fileExt}`;
+
+                    const url = await uploadFileToSupabase(file, 'gallery-images', customFileName);
                     if (url) {
                         // Check URL-level duplicate
                         if (!existingUrls.has(url)) {
@@ -726,16 +908,51 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    function saveGalleryToStorage() {
+    async function saveGalleryToStorage() {
         const storedContent = localStorage.getItem('website_content');
         const content = storedContent ? JSON.parse(storedContent) : { ...defaultContent };
+
+        // Deduplicate URLs before saving using Set - SAVE ALL 8 CATEGORIES
         content.gallery = {
-            wedding: galleryImages.wedding.join(', '),
-            housewarming: galleryImages.housewarming.join(', '),
-            birthday: galleryImages.birthday.join(', '),
-            corporate: galleryImages.corporate.join(', ')
+            wedding: [...new Set(galleryImages.wedding)].join(', '),
+            engagement: [...new Set(galleryImages.engagement)].join(', '),
+            anniversary: [...new Set(galleryImages.anniversary)].join(', '),
+            housewarming: [...new Set(galleryImages.housewarming)].join(', '),
+            birthday: [...new Set(galleryImages.birthday)].join(', '),
+            family: [...new Set(galleryImages.family)].join(', '),
+            travel: [...new Set(galleryImages.travel)].join(', '),
+            corporate: [...new Set(galleryImages.corporate)].join(', ')
         };
+
+        // 1. Save to LocalStorage
         localStorage.setItem('website_content', JSON.stringify(content));
+
+        // 2. Sync to Supabase Manifest (The Truth)
+        if (typeof window.saveSystemState === 'function') {
+            await window.saveSystemState(content);
+        } else {
+            console.warn('saveSystemState not available');
+        }
+
+        // 3. Trigger gallery update (Reloads from Manifest)
+        triggerGalleryUpdate();
+    }
+
+    function triggerGalleryUpdate() {
+        // Reload gallery from Supabase/localStorage on this page
+        if (typeof window.loadGalleryFromSupabase === 'function') {
+            window.loadGalleryFromSupabase();
+        }
+
+        // Dispatch custom event for other tabs/windows
+        window.dispatchEvent(new Event('galleryUpdated'));
+
+        // Also trigger storage event for other tabs
+        window.dispatchEvent(new StorageEvent('storage', {
+            key: 'website_content',
+            newValue: localStorage.getItem('website_content'),
+            url: window.location.href
+        }));
     }
 
     // Load existing gallery images on page load
@@ -794,7 +1011,62 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // --- Refresh Gallery from Supabase ---
+    document.getElementById('refresh-gallery-btn')?.addEventListener('click', async () => {
+        const btn = document.getElementById('refresh-gallery-btn');
+        const originalHtml = btn.innerHTML;
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Refreshing...';
+
+        try {
+            // Force clear the gallery data and reload
+            if (typeof window.loadGalleryFromSupabase === 'function') {
+                await window.loadGalleryFromSupabase();
+                showAdminToast('Gallery refreshed from Supabase successfully!');
+            } else {
+                showAdminToast('Gallery refresh failed', true);
+            }
+        } catch (error) {
+            console.error('Error refreshing gallery:', error);
+            showAdminToast('Error refreshing gallery', true);
+        } finally {
+            btn.disabled = false;
+            btn.innerHTML = originalHtml;
+        }
+    });
+
+    // Cleanup any duplicate URLs in localStorage gallery data
+    function cleanupDuplicateGalleryUrls() {
+        const stored = localStorage.getItem('website_content');
+        if (!stored) return;
+
+        try {
+            const content = JSON.parse(stored);
+            if (content.gallery) {
+                let cleaned = false;
+                ['wedding', 'engagement', 'anniversary', 'housewarming', 'birthday', 'family', 'travel', 'corporate'].forEach(cat => {
+                    if (content.gallery[cat]) {
+                        const urls = content.gallery[cat].split(',').map(u => u.trim()).filter(u => u);
+                        const uniqueUrls = [...new Set(urls)];
+                        if (urls.length !== uniqueUrls.length) {
+                            cleaned = true;
+                            console.log(`🧹 Cleaned ${urls.length - uniqueUrls.length} duplicate(s) from ${cat} gallery`);
+                        }
+                        content.gallery[cat] = uniqueUrls.join(', ');
+                    }
+                });
+                if (cleaned) {
+                    localStorage.setItem('website_content', JSON.stringify(content));
+                    console.log('✅ Gallery duplicates cleaned from localStorage');
+                }
+            }
+        } catch (err) {
+            console.warn('Error cleaning up gallery duplicates:', err);
+        }
+    }
+
     // Load content on page load
+    cleanupDuplicateGalleryUrls(); // Clean duplicates first
     loadWebsiteContent();
     loadGalleryPreviews();
 });

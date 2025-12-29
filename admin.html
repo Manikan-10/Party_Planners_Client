@@ -65,6 +65,7 @@
                     <button class="tab-btn active" data-tab="contacts">Contacts</button>
                     <button class="tab-btn" data-tab="bookings">Bookings</button>
                     <button class="tab-btn" data-tab="web-content">Web Content</button>
+                    <button class="tab-btn" data-tab="reviews">Reviews</button>
                 </div>
                 <button id="logout-btn" class="logout-btn">
                     <i class="fas fa-sign-out-alt"></i> Logout
@@ -357,13 +358,20 @@
                 <!-- Gallery Section Editor -->
                 <div id="gallery-subtab" class="subtab-content">
                     <div class="content-card">
-                        <h3><i class="fas fa-images"></i> Gallery Management</h3>
-                        <p class="info-text">
-                            <i class="fas fa-info-circle"></i>
-                            <strong>Note:</strong> Gallery images auto-save immediately upon upload - <strong>no Save
-                                button needed</strong>. Changes in other tabs (Hero, About, Services, Contact) require
-                            clicking Save.
-                        </p>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                            <div>
+                                <h3><i class="fas fa-images"></i> Gallery Management</h3>
+                                <p class="info-text">
+                                    <i class="fas fa-info-circle"></i>
+                                    <strong>Note:</strong> Gallery images auto-save immediately upon upload - <strong>no Save
+                                        button needed</strong>. Changes in other tabs (Hero, About, Services, Contact) require
+                                    clicking Save.
+                                </p>
+                            </div>
+                            <button id="refresh-gallery-btn" class="btn btn-primary" style="white-space: nowrap; margin-left: 20px;">
+                                <i class="fas fa-sync"></i> Refresh Gallery
+                            </button>
+                        </div>
 
                         <div class="gallery-upload-grid">
                             <!-- Wedding Photography Upload -->
@@ -387,7 +395,7 @@
                                 </div>
                             </div>
 
-                            <!-- House Warming Upload -->
+                            <!-- Housewarming Event Upload -->
                             <div class="gallery-upload-card">
                                 <h4><i class="fas fa-home"></i> House Warming Event</h4>
                                 <div class="gallery-drop-zone" data-category="housewarming">
@@ -401,6 +409,38 @@
                                 </div>
                                 <div class="gallery-preview-grid" id="housewarming-preview"></div>
                                 <div class="upload-progress" id="housewarming-progress" style="display:none;"></div>
+                            </div>
+
+                            <!-- Engagement Upload -->
+                            <div class="gallery-upload-card">
+                                <h4><i class="fas fa-ring"></i> Engagement</h4>
+                                <div class="gallery-drop-zone" data-category="engagement">
+                                    <input type="file" class="gallery-file-input" data-category="engagement"
+                                        accept="image/*" multiple style="display:none;">
+                                    <div class="drop-placeholder">
+                                        <i class="fas fa-cloud-upload-alt"></i>
+                                        <span>Drop images or click to upload</span>
+                                        <small>Multiple files allowed</small>
+                                    </div>
+                                </div>
+                                <div class="gallery-preview-grid" id="engagement-preview"></div>
+                                <div class="upload-progress" id="engagement-progress" style="display:none;"></div>
+                            </div>
+
+                            <!-- Anniversary Upload -->
+                            <div class="gallery-upload-card">
+                                <h4><i class="fas fa-heart"></i> Anniversary</h4>
+                                <div class="gallery-drop-zone" data-category="anniversary">
+                                    <input type="file" class="gallery-file-input" data-category="anniversary"
+                                        accept="image/*" multiple style="display:none;">
+                                    <div class="drop-placeholder">
+                                        <i class="fas fa-cloud-upload-alt"></i>
+                                        <span>Drop images or click to upload</span>
+                                        <small>Multiple files allowed</small>
+                                    </div>
+                                </div>
+                                <div class="gallery-preview-grid" id="anniversary-preview"></div>
+                                <div class="upload-progress" id="anniversary-progress" style="display:none;"></div>
                             </div>
 
                             <!-- Birthday Celebration Upload -->
@@ -417,6 +457,38 @@
                                 </div>
                                 <div class="gallery-preview-grid" id="birthday-preview"></div>
                                 <div class="upload-progress" id="birthday-progress" style="display:none;"></div>
+                            </div>
+
+                            <!-- Family Reunion Upload -->
+                            <div class="gallery-upload-card">
+                                <h4><i class="fas fa-users"></i> Family Reunion</h4>
+                                <div class="gallery-drop-zone" data-category="family">
+                                    <input type="file" class="gallery-file-input" data-category="family"
+                                        accept="image/*" multiple style="display:none;">
+                                    <div class="drop-placeholder">
+                                        <i class="fas fa-cloud-upload-alt"></i>
+                                        <span>Drop images or click to upload</span>
+                                        <small>Multiple files allowed</small>
+                                    </div>
+                                </div>
+                                <div class="gallery-preview-grid" id="family-preview"></div>
+                                <div class="upload-progress" id="family-progress" style="display:none;"></div>
+                            </div>
+
+                            <!-- Travel & Vacation Upload -->
+                            <div class="gallery-upload-card">
+                                <h4><i class="fas fa-plane"></i> Travel & Vacation</h4>
+                                <div class="gallery-drop-zone" data-category="travel">
+                                    <input type="file" class="gallery-file-input" data-category="travel"
+                                        accept="image/*" multiple style="display:none;">
+                                    <div class="drop-placeholder">
+                                        <i class="fas fa-cloud-upload-alt"></i>
+                                        <span>Drop images or click to upload</span>
+                                        <small>Multiple files allowed</small>
+                                    </div>
+                                </div>
+                                <div class="gallery-preview-grid" id="travel-preview"></div>
+                                <div class="upload-progress" id="travel-progress" style="display:none;"></div>
                             </div>
 
                             <!-- Corporate Event Upload -->
@@ -438,6 +510,78 @@
                     </div>
                 </div>
             </section>
+            <!-- Reviews Tab -->
+            <section id="reviews-tab" class="tab-content">
+                <div class="tab-header">
+                    <h2>Manage Reviews</h2>
+                    <button class="refresh-btn" id="refresh-reviews"><i class="fas fa-sync"></i> Refresh</button>
+                </div>
+
+                <!-- Add Review Form -->
+                <div class="admin-card">
+                    <h3>Add New Review</h3>
+                    <form id="add-review-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="review-name">Client Name</label>
+                                <input type="text" id="review-name" required placeholder="e.g. John Doe">
+                            </div>
+                            <div class="form-group">
+                                <label for="review-location">Location</label>
+                                <input type="text" id="review-location" placeholder="e.g. New York, NY">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="review-rating">Rating</label>
+                                <select id="review-rating">
+                                    <option value="5">5 Stars</option>
+                                    <option value="4">4 Stars</option>
+                                    <option value="3">3 Stars</option>
+                                    <option value="2">2 Stars</option>
+                                    <option value="1">1 Star</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="review-photo">Profile Photo (Optional)</label>
+                                <input type="file" id="review-photo" accept="image/*">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="review-images">Event Images (Up to 3)</label>
+                            <input type="file" id="review-images" accept="image/*" multiple>
+                            <small style="color: var(--text-muted); margin-top: 5px; display: block;">Select up to 3 images to showcase the event</small>
+                            <div id="review-images-preview" class="gallery-preview-grid" style="margin-top: 10px;"></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="review-text">Review Text</label>
+                            <textarea id="review-text" rows="4" required placeholder="Enter the client's review..."></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Add Review</button>
+                    </form>
+                </div>
+
+                <!-- Reviews List -->
+                <div class="table-container" style="margin-top: 30px;">
+                    <table id="reviews-table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Name</th>
+                                <th>Location</th>
+                                <th>Rating</th>
+                                <th>Review</th>
+                                <th>Images</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="reviews-body">
+                            <!-- Data populated by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
         </main>
     </div>
 
@@ -449,8 +593,8 @@
         </div>
     </div>
 
-    <script src="supabase-config.js"></script>
-    <script src="admin.js"></script>
+    <script src="supabase-config.js?v=2"></script>
+    <script src="admin.js?v=2"></script>
 </body>
 
 </html>

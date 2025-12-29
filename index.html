@@ -41,7 +41,7 @@
                 <a href="#services" class="nav-link">Services</a>
                 <a href="#gallery" class="nav-link">Gallery</a>
                 <a href="#contact" class="nav-link">Contact</a>
-                <a href="admin.html" class="nav-link">Admin</a>
+                <!-- <a href="admin.html" class="nav-link">Admin</a> -->
                 <a href="#book-event" class="nav-link nav-cta">Book Event</a>
             </div>
             <div class="nav-toggle" id="nav-toggle">
@@ -232,6 +232,43 @@
                     Browse through our portfolio of captured moments and creative projects.
                 </p>
             </div>
+            
+            <!-- Gallery Category Tabs -->
+            <div class="gallery-tabs">
+                <button class="gallery-tab active" data-category="wedding">
+                    <i class="fas fa-heart"></i>
+                    Wedding Photography
+                </button>
+                <button class="gallery-tab" data-category="engagement">
+                    <i class="fas fa-ring"></i>
+                    Engagement
+                </button>
+                <button class="gallery-tab" data-category="anniversary">
+                    <i class="fas fa-heart"></i>
+                    Anniversary
+                </button>
+                <button class="gallery-tab" data-category="housewarming">
+                    <i class="fas fa-home"></i>
+                    House Warming
+                </button>
+                <button class="gallery-tab" data-category="birthday">
+                    <i class="fas fa-birthday-cake"></i>
+                    Birthday Celebration
+                </button>
+                <button class="gallery-tab" data-category="family">
+                    <i class="fas fa-users"></i>
+                    Family Reunion
+                </button>
+                <button class="gallery-tab" data-category="travel">
+                    <i class="fas fa-plane"></i>
+                    Travel & Vacation
+                </button>
+                <button class="gallery-tab" data-category="corporate">
+                    <i class="fas fa-briefcase"></i>
+                    Corporate Event
+                </button>
+            </div>
+
             <div class="gallery-grid" id="gallery-grid">
                 <!-- Gallery content is managed through the Admin Panel -->
                 <!-- Upload images in Admin → Web Content → Gallery -->
@@ -248,6 +285,30 @@
                     <i class="fab fa-instagram"></i>
                     View More on Instagram
                 </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="testimonials" id="testimonials">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">Testimonials</span>
+                <h2 class="section-title">What Our <span class="gradient-text">Clients Say</span></h2>
+            </div>
+            <div class="testimonials-wrapper">
+                <button class="testimonials-nav testimonials-nav-left" id="scroll-left">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <div class="testimonials-scroll-container" id="testimonials-grid">
+                    <!-- Reviews will be loaded here dynamically -->
+                    <div class="loading-spinner">
+                        <i class="fas fa-spinner fa-spin"></i> Loading reviews...
+                    </div>
+                </div>
+                <button class="testimonials-nav testimonials-nav-right" id="scroll-right">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
             </div>
         </div>
     </section>

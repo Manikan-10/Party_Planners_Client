@@ -23,6 +23,29 @@ document.addEventListener('DOMContentLoaded', function () {
     initFormValidation();
     initFormCache(); // Add form caching
     initDynamicContent(); // Load admin-editable content
+    loadReviewsFromSupabase(); // Load reviews from Supabase
+    // Load gallery from Supabase so admin uploads show on the homepage
+    if (typeof window.loadGalleryFromSupabase === 'function') {
+        window.loadGalleryFromSupabase();
+    }
+
+    // Update gallery when admin uploads - custom event from same window
+    window.addEventListener('galleryUpdated', () => {
+        console.log('📸 Gallery update detected (custom event)');
+        if (typeof window.loadGalleryFromSupabase === 'function') {
+            window.loadGalleryFromSupabase();
+        }
+    });
+
+    // Also respond to localStorage changes from other tabs (e.g., admin saved content)
+    window.addEventListener('storage', (e) => {
+        if (e.key === 'website_content') {
+            console.log('📸 Gallery update detected (storage event)');
+            if (typeof window.loadGalleryFromSupabase === 'function') {
+                window.loadGalleryFromSupabase();
+            }
+        }
+    });
 });
 
 /* ============================================
@@ -972,63 +995,144 @@ function initDynamicContent() {
         }
 
         // ===== GALLERY SECTION =====
-        if (content.gallery) {
-            const galleryGrid = document.getElementById('gallery-grid');
-            if (galleryGrid) {
-                // Clear existing content
-                galleryGrid.innerHTML = '';
-
-                const categories = [
-                    { key: 'wedding', label: 'Wedding Photography', data: content.gallery.wedding },
-                    { key: 'housewarming', label: 'House Warming', data: content.gallery.housewarming },
-                    { key: 'birthday', label: 'Birthday Celebration', data: content.gallery.birthday },
-                    { key: 'corporate', label: 'Corporate Event', data: content.gallery.corporate }
-                ];
-
-                categories.forEach((category, index) => {
-                    if (category.data) {
-                        const urls = category.data.split(',').map(u => u.trim()).filter(u => u);
-
-                        if (urls.length > 0) {
-                            // Create gallery item (slideshow if multiple images)
-                            const galleryItem = document.createElement('div');
-                            galleryItem.className = urls.length > 1 ? 'gallery-item large slideshow' : 'gallery-item large';
-                            if (urls.length > 1) {
-                                galleryItem.setAttribute('data-interval', '3000');
-                            }
-
-                            // Add images
-                            urls.forEach((url, imgIndex) => {
-                                const img = document.createElement('img');
-                                img.src = url;
-                                img.alt = `${category.label} ${imgIndex + 1}`;
-                                img.loading = 'lazy';
-                                if (imgIndex === 0) {
-                                    img.classList.add('active');
-                                }
-                                galleryItem.appendChild(img);
-                            });
-
-                            // Add category label
-                            const label = document.createElement('div');
-                            label.className = 'gallery-label';
-                            label.textContent = category.label;
-                            galleryItem.appendChild(label);
-
-                            galleryGrid.appendChild(galleryItem);
-                        }
-                    }
-                });
-
-                // Re-initialize gallery slideshows after adding new content
-                if (typeof initGallerySlideshows === 'function') {
-                    initGallerySlideshows();
-                }
-            }
-        }
+        // Note: Gallery is now managed exclusively by loadGalleryFromSupabase() in supabase-config.js
+        // to prevent duplicate images. Admin-uploaded images from Supabase storage are the only source.
+        // The old localStorage-based gallery loading has been disabled.
 
         console.log('Dynamic content loaded successfully');
     } catch (error) {
         console.warn('Could not load dynamic content:', error);
     }
+}
+
+/* ============================================
+   Load Reviews from Supabase
+   ============================================ */
+async function loadReviewsFromSupabase() {
+    const testimonialsGrid = document.getElementById('testimonials-grid');
+    if (!testimonialsGrid) return;
+
+    // Wait for Supabase to initialize
+    if (!window.supabaseClient && !window.fetchReviews) {
+        setTimeout(loadReviewsFromSupabase, 500);
+        return;
+    }
+
+    try {
+        const reviews = await window.fetchReviews();
+
+        if (!reviews || reviews.length === 0) {
+            testimonialsGrid.innerHTML = '<p style="text-align:center; grid-column: 1/-1; color: var(--text-muted);">No reviews yet. Be the first to review us!</p>';
+            return;
+        }
+
+        testimonialsGrid.innerHTML = reviews.map(r => {
+            // Get event images
+            const eventImages = [r.image_url_1, r.image_url_2, r.image_url_3].filter(url => url);
+            
+            return `
+            <div class="testimonial-card">
+                <div class="testimonial-header">
+                    ${r.photo_url
+                ? `<img src="${r.photo_url}" alt="${r.name}" class="testimonial-avatar">`
+                : `<div class="testimonial-avatar-placeholder">${r.name.charAt(0)}</div>`
+            }
+                    <div class="testimonial-info">
+                        <h4>${r.name}</h4>
+                        ${r.location ? `<p class="testimonial-location"><i class="fas fa-map-marker-alt"></i> ${r.location}</p>` : ''}
+                        <div class="testimonial-rating">
+                            ${'★'.repeat(r.rating)}${'☆'.repeat(5 - r.rating)}
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-text">
+                    "${r.review_text}"
+                </div>
+                ${eventImages.length > 0 ? `
+                <div class="testimonial-images">
+                    ${eventImages.map(url => `
+                        <div class="testimonial-image-item">
+                            <img src="${url}" alt="Event photo" onclick="window.open('${url}', '_blank')">
+                        </div>
+                    `).join('')}
+                </div>
+                ` : ''}
+                <div class="testimonial-date">
+                    <i class="far fa-clock"></i> ${formatReviewDate(r.created_at)}
+                </div>
+            </div>
+        `;
+        }).join('');
+
+        // Initialize scroll navigation
+        initTestimonialsScroll();
+
+    } catch (error) {
+        console.error('Error loading reviews:', error);
+        testimonialsGrid.innerHTML = '<p style="text-align:center; grid-column: 1/-1; color: var(--text-muted);">Failed to load reviews.</p>';
+    }
+}
+
+// Initialize testimonials horizontal scroll navigation
+function initTestimonialsScroll() {
+    const scrollContainer = document.getElementById('testimonials-grid');
+    const leftBtn = document.getElementById('scroll-left');
+    const rightBtn = document.getElementById('scroll-right');
+
+    if (!scrollContainer || !leftBtn || !rightBtn) return;
+
+    const scrollAmount = 400; // Pixels to scroll on each click
+
+    leftBtn.addEventListener('click', () => {
+        scrollContainer.scrollBy({
+            left: -scrollAmount,
+            behavior: 'smooth'
+        });
+    });
+
+    rightBtn.addEventListener('click', () => {
+        scrollContainer.scrollBy({
+            left: scrollAmount,
+            behavior: 'smooth'
+        });
+    });
+
+    // Show/hide buttons based on scroll position
+    function updateButtons() {
+        const isAtStart = scrollContainer.scrollLeft <= 10;
+        const isAtEnd = scrollContainer.scrollLeft + scrollContainer.clientWidth >= scrollContainer.scrollWidth - 10;
+
+        leftBtn.style.opacity = isAtStart ? '0.3' : '1';
+        leftBtn.style.pointerEvents = isAtStart ? 'none' : 'auto';
+        
+        rightBtn.style.opacity = isAtEnd ? '0.3' : '1';
+        rightBtn.style.pointerEvents = isAtEnd ? 'none' : 'auto';
+    }
+
+    scrollContainer.addEventListener('scroll', updateButtons);
+    updateButtons(); // Initial check
+
+    // Add keyboard navigation
+    scrollContainer.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowLeft') {
+            scrollContainer.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+        } else if (e.key === 'ArrowRight') {
+            scrollContainer.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+        }
+    });
+}
+
+// Helper function to format review date
+function formatReviewDate(dateString) {
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffTime = Math.abs(now - date);
+    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+    
+    if (diffDays === 0) return 'Today';
+    if (diffDays === 1) return 'Yesterday';
+    if (diffDays < 7) return `${diffDays} days ago`;
+    if (diffDays < 30) return `${Math.floor(diffDays / 7)} weeks ago`;
+    if (diffDays < 365) return `${Math.floor(diffDays / 30)} months ago`;
+    return date.toLocaleDateString();
 }
